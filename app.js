@@ -5,13 +5,14 @@ const cors = require('cors')
 app.use(cors())
 
 app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
 
 // 封装res.cc函数
 app.use((req, res, next) => {
-    // status默认值为1，表示失败的情况
-    res.cc = function (err, status = 1) {
+    // ok默认值为false，表示失败的情况
+    res.cc = function (err, ok = false) {
         res.send({
-            status,
+            ok,
             message: err instanceof Error ? err.message : err
         })
     }
@@ -28,6 +29,9 @@ app.use(expressJWt({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] 
 const userRouter = require('./router/user')
 app.use('/api', userRouter)
 
+// 导入上传图片路由模块
+const uploadfileRouter = require('./router/uploadfile')
+app.use('/api', uploadfileRouter)
 
 
 // 定义错误级别中间件
