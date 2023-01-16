@@ -1,5 +1,9 @@
 const express = require('express')
 const app = express()
+
+// 配置验证规则
+const joi = require('joi')
+
 // 配置跨域
 const cors = require('cors')
 app.use(cors())
@@ -33,6 +37,18 @@ app.use('/api', userRouter)
 const uploadfileRouter = require('./router/uploadfile')
 app.use('/api', uploadfileRouter)
 
+// 导入上传商品路由模块
+const pubgoodsRouter = require('./router/pubgoods')
+app.use('/api', pubgoodsRouter)
+
+// 导入首页获取商品列表路由模块
+const getgoodslistRouter = require('./router/getgoods')
+app.use('/api', getgoodslistRouter)
+
+
+
+
+
 
 // 定义错误级别中间件
 app.use((err, req, res, next) => {
@@ -43,6 +59,9 @@ app.use((err, req, res, next) => {
     // 未知的错误
     res.cc(err)
 })
+
+// 挂载静态资源
+app.use('/api/uploads/goods_pic', express.static('./uploads/goods_pic'))
 
 app.listen(3000, () => {
     console.log('express服务器启动成功~');
