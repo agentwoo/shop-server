@@ -37,6 +37,10 @@ app.use('/api', userRouter)
 const uploadfileRouter = require('./router/uploadfile')
 app.use('/api', uploadfileRouter)
 
+// 导入上传轮播图图片路由模块
+const uploadswiperRouter = require('./router/swiper')
+app.use('/api', uploadswiperRouter)
+
 // 导入上传商品路由模块
 const pubgoodsRouter = require('./router/pubgoods')
 app.use('/api', pubgoodsRouter)
@@ -44,6 +48,10 @@ app.use('/api', pubgoodsRouter)
 // 导入首页获取商品列表路由模块
 const getgoodslistRouter = require('./router/getgoods')
 app.use('/api', getgoodslistRouter)
+
+// 导入商品分类路由模块
+const goodskindRouter = require('./router/goodskind')
+app.use('/api', goodskindRouter)
 
 
 
@@ -56,12 +64,16 @@ app.use((err, req, res, next) => {
     if (err instanceof joi.ValidationError) return res.cc(err)
     // 捕获身份验证失败的错误
     if (err.name = 'UnauthorizedError') return res.cc('身份验证失败！')
+
     // 未知的错误
     res.cc(err)
 })
 
-// 挂载静态资源
+// 挂载图片静态资源
 app.use('/api/uploads/goods_pic', express.static('./uploads/goods_pic'))
+
+// 挂载轮播图静态资源
+app.use('/api/uploads/swiper', express.static('./uploads/swiper'))
 
 app.listen(3000, () => {
     console.log('express服务器启动成功~');

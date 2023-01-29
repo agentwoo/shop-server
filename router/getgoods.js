@@ -4,6 +4,10 @@ const router = express.Router()
 // 导入用户路由处理函数
 const { getallgoodsList, getnewgoodsList, gethotgoodsList, getfreegoodsList } = require('../router_handler/getgoods')
 
+// 获取单个商品详情
+// router.post('/getgoodsdesc', getgoodsdesc)
+
+
 // 获取全部商品
 router.get('/getallgoodsList', getallgoodsList)
 

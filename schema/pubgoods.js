@@ -8,6 +8,12 @@ const goods_present_price = joi.string().pattern(/^[\S]{0,5}$/).required()
 const goods_title_img = joi.string().required().required()
 const goods_contact = joi.string().alphanum().pattern(/^[\S]{0,20}$/).required()
 const goods_kind = joi.string().required()
+const goods_swiper_img1 = joi.string().required()
+const goods_swiper_img2 = joi.string().required()
+const goods_swiper_img3 = joi.string().required()
+const goods_swiper_img4 = joi.string().required()
+
+
 
 const pub_user_id = joi.string().min(1)
 
@@ -22,6 +28,10 @@ exports.pubgoods_schema = {
         goods_title_img,
         goods_contact,
         goods_kind,
+        goods_swiper_img1,
+        goods_swiper_img2,
+        goods_swiper_img3,
+        goods_swiper_img4,
     },
 }
 exports.getpubgoods_schema = {
