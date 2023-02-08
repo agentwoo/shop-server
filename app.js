@@ -53,6 +53,17 @@ app.use('/api', getgoodslistRouter)
 const goodskindRouter = require('./router/goodskind')
 app.use('/api', goodskindRouter)
 
+// 导入商品编辑路由模块
+const editgoodsRouter = require('./router/editgoods')
+app.use('/api', editgoodsRouter)
+
+// 导入购买商品的路由模块
+const buygoodsRouter = require('./router/buygoods')
+app.use('/api', buygoodsRouter)
+
+// 导入订单的路由模块
+const ordergoodsRouter = require('./router/ordergoods')
+app.use('/api', ordergoodsRouter)
 
 
 

@@ -1,7 +1,7 @@
 const db = require('../db/index')
 
 
-// 获取商品分类
+// 获取商品分类菜单
 exports.getgoodskind = (req, res) => {
     const sql = `select * from goods_kind`
     db.query(sql, (err, results) => {
