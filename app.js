@@ -65,6 +65,13 @@ app.use('/api', buygoodsRouter)
 const ordergoodsRouter = require('./router/ordergoods')
 app.use('/api', ordergoodsRouter)
 
+// 导入收藏列表的路由模块
+const collectgoodsRouter = require('./router/collectgoods')
+app.use('/api', collectgoodsRouter)
+
+
+
+
 
 
 
