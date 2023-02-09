@@ -59,6 +59,19 @@ exports.cancelordergoods = (req, res) => {
             if (results.affectedRows !== 1) res.cc(err)
             res.cc('取消成功!', true)
         })
+
+
+        // 将收藏列表的商品状态改为1
+        const sql2 = `select * from collect_goods where goods_id = ?`
+        db.query(sql2, req.body.goods_id, (err, results) => {
+            if (err) res.cc(err)
+            if (results.length !== 0) {
+                const sql = `update collect_goods set goods_status = '1' where goods_id= ?`
+                db.query(sql, req.body.goods_id, (err, results) => {
+                    if (err) res.cc(err)
+                })
+            }
+        })
     })
 }
 
