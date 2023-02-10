@@ -5,7 +5,15 @@ const router = express.Router()
 const expressJoi = require('@escook/express-joi')
 const { pubgoods_schema, getpubgoods_schema, delgoodsitem_schema } = require('../schema/pubgoods')
 // 导入用户路由处理函数
-const { pubgoods, getpubgoods, delgoodsitem, tradegoods, shippedgoods, tradefinishedgoods } = require('../router_handler/pubgoods')
+const {
+    pubgoods,
+    getpubgoods,
+    delgoodsitem,
+    tradegoods,
+    shippedgoods,
+    tradefinishedgoods,
+    updategoodsdesc
+} = require('../router_handler/pubgoods')
 
 
 // 商品发布
@@ -25,5 +33,8 @@ router.post('/shippedgoods', shippedgoods)
 
 // 已完成交易的商品列表
 router.post('/tradefinishedgoods', tradefinishedgoods)
+
+// 修改商品详情
+router.post('/updategoodsdesc', updategoodsdesc)
 
 module.exports = router

@@ -86,3 +86,40 @@ exports.tradefinishedgoods = (req, res) => {
 }
 
 
+// 修改商品列表
+exports.updategoodsdesc = (req, res) => {
+    goodsinfo = req.body
+    // 修改pub_goods表中的数据
+    const sql =
+        `update pub_goods set goods_title=? ,goods_desc=?, goods_origin_price=? ,
+         goods_present_price=?,goods_contact=? where goods_id = ?`
+    db.query(sql,
+        [
+            goodsinfo.goods_title, goodsinfo.goods_desc,
+            goodsinfo.goods_origin_price, goodsinfo.goods_present_price,
+            goodsinfo.goods_contact, goodsinfo.goods_id
+        ], (err, results) => {
+            if (err) res.cc(err)
+            if (results.affectedRows !== 1) res.cc('更新失败！')
+            // 查询collect_goods表中是否有该数据
+            const sql = ` select * from collect_goods where goods_id = ?`
+            db.query(sql, goodsinfo.goods_id, (err, results) => {
+                if (err) res.cc(err)
+                if (results.length === 0) res.cc('更新成功！', true)
+                // 修改collect_goods表中数据
+                const sql =
+                    `update collect_goods set goods_present_price=?,goods_contact=?,goods_title=? ,goods_desc=?
+                 where goods_id = ?`
+                db.query(sql,
+                    [
+                        goodsinfo.goods_present_price, goodsinfo.goods_contact,
+                        goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_id
+                    ], (err, results) => {
+                        if (err) res.cc(err)
+                        if (results.affectedRows !== 1) res.cc('更新失败！')
+                        res.cc('更新成功！', true)
+                    })
+            })
+        })
+}
+

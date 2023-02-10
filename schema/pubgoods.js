@@ -1,12 +1,12 @@
 // 导入验证规则的包
 const joi = require('joi')
 
-const goods_title = joi.string().alphanum().pattern(/^[\S]{0,7}$/).required()
-const goods_desc = joi.string().alphanum().pattern(/^[\S]{0,20}$/).required()
+const goods_title = joi.string().pattern(/^[\S]{0,7}$/).required()
+const goods_desc = joi.string().pattern(/^[\S]{0,20}$/).required()
 const goods_origin_price = joi.string().pattern(/^[\S]{0,5}$/).required()
 const goods_present_price = joi.string().pattern(/^[\S]{0,5}$/).required()
 const goods_title_img = joi.string().required().required()
-const goods_contact = joi.string().alphanum().pattern(/^[\S]{0,20}$/).required()
+const goods_contact = joi.string().pattern(/^[\S]{0,20}$/).required()
 const goods_pid = joi.string().required()
 const goods_kind = joi.string().required()
 const goods_swiper_img1 = joi.string().required()
