@@ -2,6 +2,7 @@ const db = require('../db/index')
 
 // 购买商品,并将商品数据插入到订单列表里
 exports.buygoodsitem = (req, res) => {
+    let user_id = req.user.user_id
     // 将商品状态改为2
     const sql = `update pub_goods set goods_status = '2' where goods_id = ?`
     db.query(sql, req.body.goods_id, (err, results) => {
@@ -16,7 +17,7 @@ exports.buygoodsitem = (req, res) => {
             const goodsinfo = {
                 is_delorder: 0,
                 order_create_time: new Date(),
-                buy_user_id: 2,//此处购买者id需要由前端传入
+                buy_user_id: user_id,//此处购买者id需要由前端传入
                 goods_id: goodsitem.goods_id,
                 goods_present_price: goodsitem.goods_present_price,
                 goods_title_img: goodsitem.goods_title_img,

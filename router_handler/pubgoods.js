@@ -2,12 +2,14 @@ const db = require('../db/index')
 
 // 商品发布
 exports.pubgoods = (req, res) => {
+    let user_id = req.user.user_id
+
     const goodsinfo = {
         ...req.body,
         goods_views: 0,
         goods_pub_time: new Date(),
         goods_status: 1,
-        pub_user_id: 3,
+        pub_user_id: user_id,
         is_delgoods: 0,
     }
     const sql = `insert into pub_goods set ?`
@@ -21,10 +23,9 @@ exports.pubgoods = (req, res) => {
 
 // 我发布的商品
 exports.getpubgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from pub_goods where goods_status = '1' and pub_user_id = ?  order by goods_pub_time desc`
-    // const pub_user_id = req.user.id
-
-    db.query(sql, 3, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
             ok: true,
@@ -48,8 +49,9 @@ exports.delgoodsitem = (req, res) => {
 
 // 待发货的商品列表
 exports.tradegoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from pub_goods where goods_status = '2' and pub_user_id = ?  order by goods_pub_time desc`
-    db.query(sql, 3, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
             ok: true,
@@ -61,8 +63,9 @@ exports.tradegoods = (req, res) => {
 
 // 待买家确认收货的商品列表
 exports.shippedgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from pub_goods where goods_status = '3' and pub_user_id = ?  order by goods_pub_time desc`
-    db.query(sql, 3, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
             ok: true,
@@ -74,8 +77,9 @@ exports.shippedgoods = (req, res) => {
 
 // 交易完成的商品列表
 exports.tradefinishedgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from pub_goods where goods_status = '4' and pub_user_id = ?  order by goods_pub_time desc`
-    db.query(sql, 3, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
             ok: true,
@@ -100,25 +104,27 @@ exports.updategoodsdesc = (req, res) => {
             goodsinfo.goods_contact, goodsinfo.goods_id
         ], (err, results) => {
             if (err) res.cc(err)
-            if (results.affectedRows !== 1) res.cc('更新失败！')
+            if (results.affectedRows !== 1) res.cc('更新成功！', true)
             // 查询collect_goods表中是否有该数据
             const sql = ` select * from collect_goods where goods_id = ?`
             db.query(sql, goodsinfo.goods_id, (err, results) => {
                 if (err) res.cc(err)
                 if (results.length === 0) res.cc('更新成功！', true)
                 // 修改collect_goods表中数据
-                const sql =
-                    `update collect_goods set goods_present_price=?,goods_contact=?,goods_title=? ,goods_desc=?
-                 where goods_id = ?`
-                db.query(sql,
-                    [
-                        goodsinfo.goods_present_price, goodsinfo.goods_contact,
-                        goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_id
-                    ], (err, results) => {
-                        if (err) res.cc(err)
-                        if (results.affectedRows !== 1) res.cc('更新失败！')
-                        res.cc('更新成功！', true)
-                    })
+                if (results.length !== 0) {
+                    const sql =
+                        `update collect_goods set goods_present_price=?,goods_contact=?,goods_title=? ,goods_desc=?
+                        where goods_id = ?`
+                    db.query(sql,
+                        [
+                            goodsinfo.goods_present_price, goodsinfo.goods_contact,
+                            goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_id
+                        ], (err, results) => {
+                            if (err) res.cc(err)
+                            if (results.affectedRows !== 1) res.cc('更新失败！')
+                            res.cc('更新成功！', true)
+                        })
+                }
             })
         })
 }

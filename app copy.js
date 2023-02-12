@@ -26,20 +26,21 @@ app.use((req, res, next) => {
 // 配置解析token的中间件
 const expressJWt = require('express-jwt')
 const config = require('./config')
-app.use(expressJWt({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\/my\//] }))
+app.use(expressJWt({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
+// app.use(expressJWt({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\/my\//] }))
 
 
-// 导入并注册用户路由模块
+// 导入并注册用户路由模块 --/api/my
 const userRouter = require('./router/user')
-app.use('/api/my', userRouter)
+app.use('/api', userRouter)
 
-// 导入上传轮播图图片路由模块 
-const uploadswiperRouter = require('./router/swiper')
-app.use('/api/my', uploadswiperRouter)
-
-// 导入上传图片路由模块
+// 导入上传图片路由模块 --/api/my
 const uploadfileRouter = require('./router/uploadfile')
-app.use('/api/my', uploadfileRouter)
+app.use('/api', uploadfileRouter)
+
+// 导入上传轮播图图片路由模块 --/api/my
+const uploadswiperRouter = require('./router/swiper')
+app.use('/api', uploadswiperRouter)
 
 // 导入上传商品路由模块
 const pubgoodsRouter = require('./router/pubgoods')
@@ -47,15 +48,15 @@ app.use('/api', pubgoodsRouter)
 
 // 导入首页获取商品列表路由模块 --/api/my
 const getgoodslistRouter = require('./router/getgoods')
-app.use('/api/my', getgoodslistRouter)
+app.use('/api', getgoodslistRouter)
 
 // 导入商品分类路由模块 --/api/my
 const goodskindRouter = require('./router/goodskind')
-app.use('/api/my', goodskindRouter)
+app.use('/api', goodskindRouter)
 
 // 导入商品编辑路由模块
 const editgoodsRouter = require('./router/editgoods')
-app.use('/api/my', editgoodsRouter)
+app.use('/api', editgoodsRouter)
 
 // 导入购买商品的路由模块
 const buygoodsRouter = require('./router/buygoods')
@@ -73,6 +74,9 @@ app.use('/api', collectgoodsRouter)
 
 
 
+
+
+
 // 定义错误级别中间件
 app.use((err, req, res, next) => {
     // 捕获验证规则失败导致的错误
@@ -85,10 +89,10 @@ app.use((err, req, res, next) => {
 })
 
 // 挂载图片静态资源
-app.use('/api/my/uploads/goods_pic', express.static('./uploads/goods_pic'))
+app.use('/api/uploads/goods_pic', express.static('./uploads/goods_pic'))
 
 // 挂载轮播图静态资源
-app.use('/api/my/uploads/swiper', express.static('./uploads/swiper'))
+app.use('/api/uploads/swiper', express.static('./uploads/swiper'))
 
 
 app.listen(3000, () => {

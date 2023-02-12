@@ -1,10 +1,11 @@
-const { date } = require('joi')
 const db = require('../db/index')
 
 //添加收藏 --- 需要获取用的token
 exports.addcollectgoods = (req, res) => {
+    // console.log('addcollect', req.user.user_id);
+    let user_id = req.user.user_id
     const sql = `select * from collect_goods where goods_id = ? and collect_user_id = ?`
-    db.query(sql, [req.body.goods_id, 2], (err, results) => {
+    db.query(sql, [req.body.goods_id, user_id], (err, results) => {
         // 校验是否重复收藏
         if (err) res.cc(err)
         if (results.length === 1) res.cc('该商品已经收藏过了')
@@ -16,7 +17,7 @@ exports.addcollectgoods = (req, res) => {
                 if (results.length === 0) res.cc('查询出错！')
                 let goodsinfo = results[0]
                 let collectgoodsinfo = {
-                    collect_user_id: 2,//此处收藏者id需要由前端传入
+                    collect_user_id: user_id,//此处收藏者id需要由前端传入
                     goods_id: goodsinfo.goods_id,
                     collect_create_time: new Date(),
                     goods_present_price: goodsinfo.goods_present_price,
@@ -43,9 +44,10 @@ exports.addcollectgoods = (req, res) => {
 
 // 获取收藏列表 --- 需要token
 exports.getcollectgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from collect_goods where collect_user_id = ? and goods_status = '1'`
     //  此处的collect_user_id需由前端传
-    db.query(sql, 2, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) res.cc(err)
         // if (results.length === 0) res.cc('暂无查询结果')
         res.send({
@@ -70,8 +72,9 @@ exports.delcollectgoods = (req, res) => {
 
 // 失效收藏列表 --- 需要token
 exports.expirecollectgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from collect_goods where collect_user_id = ?  and goods_status != '1'`
-    db.query(sql, 2, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) res.cc(err)
         // if (results.length === 0) res.cc('暂无商品失效！')
         res.send({

@@ -3,8 +3,9 @@ const db = require('../db/index')
 
 // 获取待发货的商品列表
 exports.gettradeordergoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from goods_order where buy_user_id = ? and is_delorder = 0 and goods_status = '2'`
-    db.query(sql, 2, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) res.cc(err)
         res.send({
             ok: true,
@@ -17,8 +18,9 @@ exports.gettradeordergoods = (req, res) => {
 
 // 获取已发货的商品列表
 exports.getshippedgoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from goods_order where buy_user_id = ? and is_delorder = 0 and goods_status= '3'`
-    db.query(sql, 2, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) res.cc(err)
         res.send({
             ok: true,
@@ -33,8 +35,9 @@ exports.getshippedgoods = (req, res) => {
 
 // 获取已完成的商品列表
 exports.getfinishordergoods = (req, res) => {
+    let user_id = req.user.user_id
     const sql = `select * from goods_order where buy_user_id = ? and is_delorder = 0 and goods_status = 4`
-    db.query(sql, 2, (err, results) => {
+    db.query(sql, user_id, (err, results) => {
         if (err) res.cc(err)
         res.send({
             ok: true,

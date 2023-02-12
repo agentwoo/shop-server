@@ -17,7 +17,9 @@ const {
 
 
 // 商品发布
-router.post('/pubgoods', expressJoi(pubgoods_schema), pubgoods)
+// router.post('/pubgoods', expressJoi(pubgoods_schema), pubgoods)
+router.post('/pubgoods', pubgoods)
+
 
 // 我发布的商品
 router.post('/getpubgoods', expressJoi(getpubgoods_schema), getpubgoods)
