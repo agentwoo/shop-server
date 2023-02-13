@@ -73,6 +73,24 @@ exports.getfreegoodsList = (req, res) => {
     })
 }
 
+// 获取搜索商品列表
+exports.getsearchgoodsList = (req, res) => {
+    const sql =
+        `select * from pub_goods 
+         where goods_status = '1' 
+         and is_delgoods = '0' 
+         and goods_title like '%${req.query.searchVal}%' `
+
+    db.query(sql, (err, results) => {
+        if (err) return res.cc(err)
+        res.send({
+            ok: true,
+            message: '查询成功',
+            data: results
+        })
+    })
+}
+
 
 
 

@@ -2,7 +2,14 @@ const express = require('express')
 const router = express.Router()
 
 // 导入用户路由处理函数
-const { getgoodsdesc, getallgoodsList, getnewgoodsList, gethotgoodsList, getfreegoodsList } = require('../router_handler/getgoods')
+const {
+    getgoodsdesc,
+    getallgoodsList,
+    getnewgoodsList,
+    gethotgoodsList,
+    getfreegoodsList,
+    getsearchgoodsList
+} = require('../router_handler/getgoods')
 
 // 导入验证规则
 const expressJoi = require('@escook/express-joi')
@@ -22,5 +29,8 @@ router.get('/gethotgoodsList', gethotgoodsList)
 
 // 获取免费商品
 router.get('/getfreegoodsList', getfreegoodsList)
+
+// 获取搜索商品
+router.post('/getsearchgoodsList', getsearchgoodsList)
 
 module.exports = router
