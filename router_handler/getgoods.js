@@ -79,7 +79,7 @@ exports.getsearchgoodsList = (req, res) => {
         `select * from pub_goods 
          where goods_status = '1' 
          and is_delgoods = '0' 
-         and goods_title like '%${req.query.searchVal}%' `
+         and goods_title like '%${req.query.searchVal}%' order by goods_present_price,goods_views desc`
 
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
