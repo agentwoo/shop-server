@@ -78,7 +78,9 @@ exports.shippedgoods = (req, res) => {
 // 交易完成的商品列表
 exports.tradefinishedgoods = (req, res) => {
     let user_id = req.user.user_id
-    const sql = `select * from pub_goods where goods_status = '4' and pub_user_id = ?  order by goods_pub_time desc`
+    const sql = `select * from pub_goods where 
+                 goods_status = '4' and is_delgoods= '0' and pub_user_id = ? 
+                 order by goods_pub_time desc`
     db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
@@ -129,3 +131,12 @@ exports.updategoodsdesc = (req, res) => {
         })
 }
 
+// 删除已完成的交易商品
+exports.deltradefinishedgoods = (req, res) => {
+    const sql = `update pub_goods set is_delgoods = '1' where goods_id = ? and pub_user_id = ?`
+    db.query(sql, [req.body.goods_id, req.user.user_id], (err, results) => {
+        if (err) res.cc(err)
+        if (results.affectedRows !== 1) res.cc('出现错误！')
+        res.cc('删除成功！', true)
+    })
+}

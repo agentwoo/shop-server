@@ -12,7 +12,8 @@ const {
     tradegoods,
     shippedgoods,
     tradefinishedgoods,
-    updategoodsdesc
+    updategoodsdesc,
+    deltradefinishedgoods
 } = require('../router_handler/pubgoods')
 
 
@@ -38,5 +39,8 @@ router.post('/tradefinishedgoods', tradefinishedgoods)
 
 // 修改商品详情
 router.post('/updategoodsdesc', updategoodsdesc)
+
+// 删除已完成的交易商品
+router.post('/deltradefinishedgoods', deltradefinishedgoods)
 
 module.exports = router

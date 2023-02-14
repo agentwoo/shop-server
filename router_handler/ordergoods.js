@@ -112,3 +112,13 @@ exports.confirmsendgoods = (req, res) => {
         })
     })
 }
+
+// 删除已完成的订单列表
+exports.delfinishedgoods = (req, res) => {
+    const sql = `update goods_order set is_delorder = 1 where order_id = ? and buy_user_id=?`
+    db.query(sql, [req.body.order_id, req.user.user_id], (err, results) => {
+        if (err) res.cc(err)
+        if (results.affectedRows !== 1) res.cc('修改错误！', true)
+        res.cc('删除成功！', true)
+    })
+}

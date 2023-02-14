@@ -1,4 +1,6 @@
 module.exports = {
+    //token加密规则
     jwtSecretKey: 'HaoZi graduation project ^_^',
-    expiresIn: '10h'
+    //token过期时间设置为24小时
+    expiresIn: '24h'
 }

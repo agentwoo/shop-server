@@ -46,7 +46,7 @@ exports.getnewgoodsList = (req, res) => {
 
 // 获取热门商品列表
 exports.gethotgoodsList = (req, res) => {
-    const sql = `select * from pub_goods where goods_status = '1' and is_delgoods = '0' order by goods_views desc `
+    const sql = `select * from pub_goods where goods_status = '1' and is_delgoods = '0' order by goods_views desc ,goods_present_price desc`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 0) return res.cc('暂无查询！', true)

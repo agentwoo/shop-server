@@ -8,7 +8,8 @@ const {
     cancelordergoods,
     confirmordergoods,
     confirmsendgoods,
-    getshippedgoods
+    getshippedgoods,
+    delfinishedgoods
 } = require('../router_handler/ordergoods')
 
 
@@ -29,5 +30,8 @@ router.post('/confirmordergoods', confirmordergoods)
 
 // 确认发货
 router.post('/confirmsendgoods', confirmsendgoods)
+
+// 删除已完成的商品
+router.post('/delfinishedgoods', delfinishedgoods)
 
 module.exports = router

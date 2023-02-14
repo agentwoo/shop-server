@@ -56,5 +56,66 @@ exports.login = (req, res) => {
     })
 }
 
+// 修改密码
+exports.updatepasswod = (req, res) => {
+    const sql = `select * from user where user_name = ?`
+    db.query(sql, req.body.user_name, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.length === 0) res.cc('查询不到该用户')
+        // 拿着用户输入的密码，和数据库中存储的密码进行对比
+        const compareResult = bcrypt.compareSync(req.body.password, results[0].password)
+        // 如果对比的结果等于true，则证明用户修改的密码与原密码一致，不允许修改
+        if (compareResult) return res.cc('新密码不能与原密码一致!')
+        let password = bcrypt.hashSync(req.body.password, 10)
+        const sql = `update user set password = ? where user_name = ?`
+        db.query(sql, [password, req.body.user_name], (err, results) => {
+            if (err) res.cc(err)
+            if (results.affectedRows !== 1) res.cc('修改失败')
+            const sql = `select * from user where user_name = ?`
+            db.query(sql, req.body.user_name, (err, results) => {
+                if (err) return res.cc(err)
+                const user = { ...results[0], password: '', user_img: '' }
+                const tokenStr = jwt.sign(user, config.jwtSecretKey, { expiresIn: config.expiresIn })
+                res.send({
+                    ok: true,
+                    message: '登录成功！',
+                    token: 'Bearer ' + tokenStr,
+                    userInfo: { ...results[0], password: '' }
+                })
+            })
+        })
+    })
+}
 
 
+// 更新头像
+exports.updateuserImg = (req, res) => {
+    const sql = `select * from user where user_name = ?`
+    db.query(sql, req.body.user_name, (err, results) => {
+        if (err) res.cc(err)
+        if (results.length === 0) res.cc('查询错误！')
+        const sql = `update user set user_img = ? where user_name = ?`
+        db.query(sql, [req.body.user_img, req.body.user_name], (err, results) => {
+            if (err) res.cc(err)
+            if (results.affectedRows !== 1) res.cc('更改失败！')
+            res.cc('修改成功！', true)
+        })
+    })
+}
+
+// 更换用户名
+exports.updateuserName = (req, res) => {
+    const sql = `select * from user where user_name=?`
+    db.query(sql, req.body.user_name, (err, results) => {
+        if (err) res.cc(err)
+        if (results.length !== 0) res.cc('用户名已被使用，请重试！')
+        if (results.length === 0) {
+            const sql = `update user set user_name = ? where user_id = ?`
+            db.query(sql, [req.body.user_name, req.body.user_id], (err, results) => {
+                if (err) res.cc(err)
+                if (results.affectedRows !== 1) res.cc('修改失败！')
+                res.cc('修改成功！', true)
+            })
+        }
+    })
+}
