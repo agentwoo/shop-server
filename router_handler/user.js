@@ -17,13 +17,19 @@ exports.register = (req, res) => {
         // 调用bcript.hashSync() 对密码进行加密
         userInfo.password = bcrypt.hashSync(userInfo.password, 10)
         const sql = `insert into user set ?`
-        db.query(sql, { user_name: userInfo.username, password: userInfo.password }, (err, results) => {
-            if (err) return res.cc(err)
-            if (results.affectedRows !== 1) {
-                return res.cc('注册用户失败，请稍后再试！')
-            }
-            res.cc('注册成功！', true)
-        })
+        db.query(sql,
+            {
+                user_name: userInfo.username,
+                password: userInfo.password,
+                user_img: 'http://localhost:3000/api/my/uploads/goods_pic/1676427516337.jpeg'
+            },
+            (err, results) => {
+                if (err) return res.cc(err)
+                if (results.affectedRows !== 1) {
+                    return res.cc('注册用户失败，请稍后再试！')
+                }
+                res.cc('注册成功！', true)
+            })
     })
 }
 
