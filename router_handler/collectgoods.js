@@ -16,24 +16,34 @@ exports.addcollectgoods = (req, res) => {
                 if (err) res.cc(err)
                 if (results.length === 0) res.cc('查询出错！')
                 let goodsinfo = results[0]
-                let collectgoodsinfo = {
-                    collect_user_id: user_id,//此处收藏者id需要由前端传入
-                    goods_id: goodsinfo.goods_id,
-                    collect_create_time: new Date(),
-                    goods_present_price: goodsinfo.goods_present_price,
-                    goods_title_img: goodsinfo.goods_title_img,
-                    goods_contact: goodsinfo.goods_contact,
-                    goods_status: goodsinfo.goods_status,
-                    goods_title: goodsinfo.goods_title,
-                    goods_desc: goodsinfo.goods_desc,
-                    is_delgoods: goodsinfo.is_delgoods
-                }
-                // 将商品详情插入到订单表里
-                const sql = `insert into collect_goods set ?`
-                db.query(sql, collectgoodsinfo, (err, results) => {
-                    if (err) return res.cc(err)
-                    if (results.affectedRows !== 1) return res.cc('添加失败！')
-                    res.cc('成功添加收藏！', true)
+
+                // 获取用户名
+                const sql2 = `select user_name from user where user_id = ?`
+                db.query(sql2, user_id, (err, results) => {
+                    if (err) res.cc(err)
+                    if (results.length === 0) res.cc('查询出错！')
+                    let user_name = results[0].user_name
+
+                    let collectgoodsinfo = {
+                        collect_user_id: user_id,//此处收藏者id需要由前端传入
+                        collect_user_name: user_name,
+                        goods_id: goodsinfo.goods_id,
+                        collect_create_time: new Date(),
+                        goods_present_price: goodsinfo.goods_present_price,
+                        goods_title_img: goodsinfo.goods_title_img,
+                        goods_contact: goodsinfo.goods_contact,
+                        goods_status: goodsinfo.goods_status,
+                        goods_title: goodsinfo.goods_title,
+                        goods_desc: goodsinfo.goods_desc,
+                        is_delgoods: goodsinfo.is_delgoods,
+                    }
+                    // 将商品详情插入到订单表里
+                    const sql = `insert into collect_goods set ?`
+                    db.query(sql, collectgoodsinfo, (err, results) => {
+                        if (err) return res.cc(err)
+                        if (results.affectedRows !== 1) return res.cc('添加失败！')
+                        res.cc('成功添加收藏！', true)
+                    })
                 })
             })
         }

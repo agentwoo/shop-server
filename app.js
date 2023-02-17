@@ -70,6 +70,27 @@ const collectgoodsRouter = require('./router/collectgoods')
 app.use('/api', collectgoodsRouter)
 
 
+// 导入后台收藏商品
+const allcollectgoodsRouter = require('./router/collectgoodsadmin')
+app.use('/api/my', allcollectgoodsRouter)
+
+// 导入后台订单商品
+const ordergoodsadminRouter = require('./router/ordergoodsadmin')
+app.use('/api/my', ordergoodsadminRouter)
+
+// 导入后台所有商品列表
+const pubgoodsadminRouter = require('./router/pubgoodsadmin')
+app.use('/api/my', pubgoodsadminRouter)
+
+
+
+
+
+
+
+
+
+
 
 
 

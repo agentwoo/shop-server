@@ -21,7 +21,10 @@ exports.register = (req, res) => {
             {
                 user_name: userInfo.username,
                 password: userInfo.password,
-                user_img: 'http://localhost:3000/api/my/uploads/goods_pic/1676427516337.jpeg'
+                user_img: 'http://localhost:3000/api/my/uploads/goods_pic/1676427516337.jpeg',
+                is_admini: 0,
+                comment: '-',
+                is_stop: 0,
             },
             (err, results) => {
                 if (err) return res.cc(err)
@@ -57,7 +60,7 @@ exports.login = (req, res) => {
             ok: true,
             message: '登录成功！',
             token: 'Bearer ' + tokenStr,
-            userInfo: { ...results[0], password: '' }
+            userInfo: { ...results[0], password: '', is_admini: '' }
         })
     })
 }
@@ -86,7 +89,7 @@ exports.updatepasswod = (req, res) => {
                     ok: true,
                     message: '登录成功！',
                     token: 'Bearer ' + tokenStr,
-                    userInfo: { ...results[0], password: '' }
+                    userInfo: { ...results[0], password: '', is_admini: '' }
                 })
             })
         })
@@ -123,5 +126,21 @@ exports.updateuserName = (req, res) => {
                 res.cc('修改成功！', true)
             })
         }
+    })
+}
+
+
+
+
+//获取用户列表(除管理员) 
+exports.getuserList = (req, res) => {
+    const sql = `select * from user where user_id != '1'`
+    db.query(sql, (err, results) => {
+        if (err) res.cc(err)
+        res.send({
+            ok: true,
+            message: '查询成功',
+            data: results
+        })
     })
 }

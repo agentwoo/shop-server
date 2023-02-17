@@ -25,7 +25,8 @@ router.post('/uploadswiper', upload.single('file'), (req, res) => {
     })
 })
 
-// 获取轮播图
+
+// 获取测试轮播图
 router.get('/getswiper', getswiper)
 
 
