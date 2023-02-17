@@ -21,7 +21,7 @@ exports.register = (req, res) => {
             {
                 user_name: userInfo.username,
                 password: userInfo.password,
-                user_img: 'http://localhost:3000/api/my/uploads/goods_pic/1676427516337.jpeg',
+                user_img: 'http://localhost:3000/api/my/uploads/goods_pic/1676622662779.jpeg',
                 is_admini: 0,
                 comment: '-',
                 is_stop: 0,
