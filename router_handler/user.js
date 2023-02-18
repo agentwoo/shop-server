@@ -79,7 +79,7 @@ exports.updatepasswod = (req, res) => {
         const sql = `update user set password = ? where user_name = ?`
         db.query(sql, [password, req.body.user_name], (err, results) => {
             if (err) res.cc(err)
-            if (results.affectedRows !== 1) res.cc('修改失败')
+            if (results.affectedRows !== 1) return res.cc('修改失败')
             const sql = `select * from user where user_name = ?`
             db.query(sql, req.body.user_name, (err, results) => {
                 if (err) return res.cc(err)
@@ -102,11 +102,11 @@ exports.updateuserImg = (req, res) => {
     const sql = `select * from user where user_name = ?`
     db.query(sql, req.body.user_name, (err, results) => {
         if (err) res.cc(err)
-        if (results.length === 0) res.cc('查询错误！')
+        if (results.length === 0) return res.cc('查询错误！')
         const sql = `update user set user_img = ? where user_name = ?`
         db.query(sql, [req.body.user_img, req.body.user_name], (err, results) => {
-            if (err) res.cc(err)
-            if (results.affectedRows !== 1) res.cc('更改失败！')
+            if (err) return res.cc(err)
+            if (results.affectedRows !== 1) return res.cc('更改失败！')
             res.cc('修改成功！', true)
         })
     })
@@ -116,13 +116,13 @@ exports.updateuserImg = (req, res) => {
 exports.updateuserName = (req, res) => {
     const sql = `select * from user where user_name=?`
     db.query(sql, req.body.user_name, (err, results) => {
-        if (err) res.cc(err)
-        if (results.length !== 0) res.cc('用户名已被使用，请重试！')
+        if (err) return res.cc(err)
+        if (results.length !== 0) return res.cc('用户名已被使用，请重试！')
         if (results.length === 0) {
             const sql = `update user set user_name = ? where user_id = ?`
             db.query(sql, [req.body.user_name, req.body.user_id], (err, results) => {
-                if (err) res.cc(err)
-                if (results.affectedRows !== 1) res.cc('修改失败！')
+                if (err) return res.cc(err)
+                if (results.affectedRows !== 1) return res.cc('修改失败！')
                 res.cc('修改成功！', true)
             })
         }
@@ -136,7 +136,7 @@ exports.updateuserName = (req, res) => {
 exports.getuserList = (req, res) => {
     const sql = `select * from user where user_id != '1'`
     db.query(sql, (err, results) => {
-        if (err) res.cc(err)
+        if (err) return res.cc(err)
         res.send({
             ok: true,
             message: '查询成功',

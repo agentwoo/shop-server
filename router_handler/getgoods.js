@@ -64,7 +64,13 @@ exports.getfreegoodsList = (req, res) => {
     const sql = `select * from pub_goods where goods_present_price = '0' and goods_status = '1' and is_delgoods = '0'`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
-        if (results.length === 0) return res.cc('暂无查询！', true)
+        if (results.length === 0) {
+            return res.send({
+                ok: true,
+                message: '暂无商品',
+                data: results
+            })
+        }
         res.send({
             ok: true,
             message: '查询成功',

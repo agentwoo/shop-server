@@ -4,7 +4,7 @@ const db = require('../db/index')
 exports.getallordergoods = (req, res) => {
     const sql = `select * from goods_order`
     db.query(sql, (err, results) => {
-        if (err) res.cc(err)
+        if (err) return res.cc(err)
         if (results.length === 0) return res.cc('暂无查询', true)
         res.send({
             ok: true,
