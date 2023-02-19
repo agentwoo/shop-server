@@ -6,7 +6,15 @@ const expressJoi = require('@escook/express-joi')
 const { reg_login_schema } = require('../schema/user')
 
 // 导入用户路由处理函数
-const { register, login, updatepasswod, updateuserImg, updateuserName, getuserList } = require('../router_handler/user')
+const {
+    register,
+    login,
+    updatepasswod,
+    updateuserImg,
+    updateuserName,
+    getuserList,
+    updateuserpasswod
+} = require('../router_handler/user')
 
 // 注册新用户
 router.post('/register', expressJoi(reg_login_schema), register)
@@ -25,6 +33,9 @@ router.post('/updateuserName', updateuserName)
 
 //获取用户列表(除管理员) 
 router.get('/getuserList', getuserList)
+
+// 管理员修改用户密码
+router.post('/updateuserpasswod', updateuserpasswod)
 
 
 module.exports = router

@@ -144,3 +144,20 @@ exports.getuserList = (req, res) => {
         })
     })
 }
+
+
+// 管理员修改用户密码
+exports.updateuserpasswod = (req, res) => {
+    const sql = `select * from user where user_name = ?`
+    db.query(sql, req.body.user_name, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.length === 0) res.cc('查询不到该用户')
+        let password = bcrypt.hashSync(req.body.password, 10)
+        const sql = `update user set password = ? where user_name = ?`
+        db.query(sql, [password, req.body.user_name], (err, results) => {
+            if (err) res.cc(err)
+            if (results.affectedRows !== 1) return res.cc('修改失败')
+            res.cc('修改成功！', true)
+        })
+    })
+}

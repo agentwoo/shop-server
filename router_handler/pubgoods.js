@@ -3,20 +3,29 @@ const db = require('../db/index')
 // 商品发布
 exports.pubgoods = (req, res) => {
     let user_id = req.user.user_id
-
-    const goodsinfo = {
-        ...req.body,
-        goods_views: 0,
-        goods_pub_time: new Date(),
-        goods_status: 1,
-        pub_user_id: user_id,
-        is_delgoods: 0,
-    }
-    const sql = `insert into pub_goods set ?`
-    db.query(sql, goodsinfo, (err, results) => {
+    // 查询该用户
+    const sql = `select user_name from user where user_id = ?`
+    db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
-        if (results.affectedRows !== 1) return res.cc('添加失败！')
-        res.cc('成功添加！', true)
+        if (results.length === 0) return res.cc('找不到该用户')
+        let user_name = results[0].user_name
+
+        // 向pub_goods中插入该数据
+        const goodsinfo = {
+            ...req.body,
+            goods_views: 0,
+            goods_pub_time: new Date(),
+            goods_status: 1,
+            pub_user_id: user_id,
+            is_delgoods: 0,
+            pub_user: user_name
+        }
+        const sql = `insert into pub_goods set ?`
+        db.query(sql, goodsinfo, (err, results) => {
+            if (err) return res.cc(err)
+            if (results.affectedRows !== 1) return res.cc('添加失败！')
+            res.cc('成功添加！', true)
+        })
     })
 }
 
