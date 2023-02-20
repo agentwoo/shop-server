@@ -13,7 +13,8 @@ const {
     shippedgoods,
     tradefinishedgoods,
     updategoodsdesc,
-    deltradefinishedgoods
+    deltradefinishedgoods,
+    getremovegoods,
 } = require('../router_handler/pubgoods')
 
 
@@ -24,6 +25,7 @@ router.post('/pubgoods', pubgoods)
 
 // 我发布的商品
 router.post('/getpubgoods', expressJoi(getpubgoods_schema), getpubgoods)
+
 
 // 删除我发布的商品
 router.post('/delgoodsitem', expressJoi(delgoodsitem_schema), delgoodsitem)
@@ -42,5 +44,8 @@ router.post('/updategoodsdesc', updategoodsdesc)
 
 // 删除已完成的交易商品
 router.post('/deltradefinishedgoods', deltradefinishedgoods)
+
+// 获取下架的商品
+router.post('/getremovegoods', getremovegoods)
 
 module.exports = router

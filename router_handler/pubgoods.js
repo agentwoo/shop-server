@@ -149,3 +149,17 @@ exports.deltradefinishedgoods = (req, res) => {
         res.cc('删除成功！', true)
     })
 }
+
+
+// 获取下架的商品
+exports.getremovegoods = (req, res) => {
+    const sql = `select * from pub_goods where is_delgoods = '1' and pub_user_id = ?`
+    db.query(sql, req.user.user_id, (err, results) => {
+        if (err) return res.cc(err)
+        res.send({
+            ok: true,
+            message: '查询成功！',
+            data: results
+        })
+    })
+}

@@ -1,6 +1,6 @@
 const db = require('../db/index')
 
-// 删除已完成的交易商品
+// 获取所有商品数据
 exports.getallgoodsadmin = (req, res) => {
     const sql = `select * from pub_goods`
     db.query(sql, (err, results) => {
@@ -11,5 +11,15 @@ exports.getallgoodsadmin = (req, res) => {
             message: '查询成功',
             data: results
         })
+    })
+}
+
+// 下架商品
+exports.removegoodsadmin = (req, res) => {
+    const sql = `update pub_goods set is_delgoods = '1' where goods_id = ?`
+    db.query(sql, req.body.goods_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows === 0) return res.cc('下架失败')
+        res.cc('下架成功', true)
     })
 }
