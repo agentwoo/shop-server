@@ -12,8 +12,11 @@ const {
     updatepasswod,
     updateuserImg,
     updateuserName,
+    loginadmin,
     getuserList,
-    updateuserpasswod
+    updateuserpasswod,
+    disableuser,
+    enableuser
 } = require('../router_handler/user')
 
 // 注册新用户
@@ -31,11 +34,20 @@ router.post('/updateuserImg', updateuserImg)
 // 更换用户名
 router.post('/updateuserName', updateuserName)
 
+// 后台管理系统
+// 登录
+router.post('/loginadmin', expressJoi(reg_login_schema), loginadmin)
+
 //获取用户列表(除管理员) 
 router.get('/getuserList', getuserList)
 
 // 管理员修改用户密码
 router.post('/updateuserpasswod', updateuserpasswod)
 
+// 停用用户
+router.post('/disableuser', disableuser)
+
+// 启用用户
+router.post('/enableuser', enableuser)
 
 module.exports = router

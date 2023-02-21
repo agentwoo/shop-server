@@ -43,8 +43,10 @@ exports.login = (req, res) => {
     const userInfo = req.body
     const sql = `select * from user where user_name = ?`
     db.query(sql, userInfo.username, (err, results) => {
-        if (err) return res.cc(err)
+        if (err) return res.cc('登录失败！')
         if (results.length != 1) return res.cc('登录失败！')
+        if (results[0].is_stop === '1') return res.cc('该账号已被停用')
+        if (results[0].is_admini === '1') return res.cc('该账号不允许登录！')
         // 判断密码是否正确
         // 拿着用户输入的密码，和数据库中存储的密码进行对比
         const compareResult = bcrypt.compareSync(userInfo.password, results[0].password)
@@ -130,6 +132,34 @@ exports.updateuserName = (req, res) => {
 }
 
 
+// 后台管理员登录
+exports.loginadmin = (req, res) => {
+    const userInfo = req.body
+    const sql = `select * from user where user_name = ?`
+    db.query(sql, userInfo.username, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.length != 1) return res.cc('登录失败！')
+        // 判断是否是管理员
+        if (results[0].is_admini !== '1') return res.cc('该账号不是管理员')
+        // 判断密码是否正确
+        // 拿着用户输入的密码，和数据库中存储的密码进行对比
+        const compareResult = bcrypt.compareSync(userInfo.password, results[0].password)
+        // 如果对比的结果等于false，则证明用户输入的密码错误
+        if (!compareResult) return res.cc('登录失败！')
+
+        // 在服务器端生成token
+        const user = { ...results[0], password: '', user_img: '' }
+        // 生成token字符串
+        const tokenStr = jwt.sign(user, config.jwtSecretKey, { expiresIn: config.expiresIn })
+        // // 向客户端发送token
+        res.send({
+            ok: true,
+            message: '登录成功！',
+            token: 'Bearer ' + tokenStr,
+            userInfo: { ...results[0], password: '', is_admini: '' }
+        })
+    })
+}
 
 
 //获取用户列表(除管理员) 
@@ -159,5 +189,26 @@ exports.updateuserpasswod = (req, res) => {
             if (results.affectedRows !== 1) return res.cc('修改失败')
             res.cc('修改成功！', true)
         })
+    })
+}
+
+
+// 停用用户
+exports.disableuser = (req, res) => {
+    const sql = `update user set is_stop = '1' where user_id = ?`
+    db.query(sql, req.body.user_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('停用失败')
+        res.cc('停用成功', true)
+    })
+}
+
+// 启用用户
+exports.enableuser = (req, res) => {
+    const sql = `update user set is_stop = '0' where user_id = ?`
+    db.query(sql, req.body.user_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('停用失败')
+        res.cc('启用成功', true)
     })
 }
