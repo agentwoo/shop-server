@@ -30,4 +30,5 @@ router.post('/uploadswiper', upload.single('file'), (req, res) => {
 router.get('/getswiper', getswiper)
 
 
+
 module.exports = router

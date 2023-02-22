@@ -82,6 +82,10 @@ app.use('/api/my', ordergoodsadminRouter)
 const pubgoodsadminRouter = require('./router/pubgoodsadmin')
 app.use('/api/my', pubgoodsadminRouter)
 
+// 导入后台轮播图管理界面
+const swiperadminRouter = require('./router/swiperadmin')
+app.use('/api/my', swiperadminRouter)
+
 
 
 
@@ -99,7 +103,7 @@ app.use((err, req, res, next) => {
     // 捕获验证规则失败导致的错误
     if (err instanceof joi.ValidationError) return res.cc(err)
     // 捕获身份验证失败的错误
-    if (err.name = 'UnauthorizedError') return res.cc('身份验证失败！')
+    if (err.name = 'UnauthorizedError') return res.cc('身份验证失败!请重新登录')
 
     // 未知的错误
     res.cc(err)
