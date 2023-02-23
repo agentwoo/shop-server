@@ -107,12 +107,16 @@ exports.updategoodsdesc = (req, res) => {
     // 修改pub_goods表中的数据
     const sql =
         `update pub_goods set goods_title=? ,goods_desc=?, goods_origin_price=? ,
-         goods_present_price=?,goods_contact=? where goods_id = ?`
+         goods_present_price=?,goods_contact=?,goods_title_img = ? ,
+         goods_swiper_img1 = ?,goods_swiper_img2 = ?,goods_swiper_img3 = ?,goods_swiper_img4 = ?
+         where goods_id = ?`
     db.query(sql,
         [
             goodsinfo.goods_title, goodsinfo.goods_desc,
             goodsinfo.goods_origin_price, goodsinfo.goods_present_price,
-            goodsinfo.goods_contact, goodsinfo.goods_id
+            goodsinfo.goods_contact, goodsinfo.goods_title_img,
+            goodsinfo.goods_swiper_img1, goodsinfo.goods_swiper_img2, goodsinfo.goods_swiper_img3, goodsinfo.goods_swiper_img4,
+            goodsinfo.goods_id
         ], (err, results) => {
             if (err) res.cc(err)
             if (results.affectedRows !== 1) res.cc('更新成功！', true)
@@ -124,12 +128,12 @@ exports.updategoodsdesc = (req, res) => {
                 // 修改collect_goods表中数据
                 if (results.length !== 0) {
                     const sql =
-                        `update collect_goods set goods_present_price=?,goods_contact=?,goods_title=? ,goods_desc=?
+                        `update collect_goods set goods_present_price=?,goods_contact=?,goods_title=? ,goods_desc=?,goods_title_img=?
                         where goods_id = ?`
                     db.query(sql,
                         [
                             goodsinfo.goods_present_price, goodsinfo.goods_contact,
-                            goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_id
+                            goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_title_img, goodsinfo.goods_id
                         ], (err, results) => {
                             if (err) res.cc(err)
                             if (results.affectedRows !== 1) res.cc('更新失败！')
