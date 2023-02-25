@@ -53,13 +53,13 @@ exports.cancelordergoods = (req, res) => {
     // 删除goods_order表中的信息
     const sql = `delete from goods_order where goods_id = ? `
     db.query(sql, req.body.goods_id, (err, results) => {
-        if (err) res.cc(err)
-        if (results.affectedRows !== 1) res.cc(err)
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc(err)
         // 修改pub_goods表中goods_status的信息
         const sql = `update pub_goods set goods_status = '1' where goods_id = ?`
         db.query(sql, req.body.goods_id, (err, results) => {
-            if (err) res.cc(err)
-            if (results.affectedRows !== 1) res.cc(err)
+            if (err) return res.cc(err)
+            if (results.affectedRows !== 1) return res.cc(err)
             res.cc('取消成功!', true)
         })
 
@@ -67,11 +67,11 @@ exports.cancelordergoods = (req, res) => {
         // 将收藏列表的商品状态改为1
         const sql2 = `select * from collect_goods where goods_id = ?`
         db.query(sql2, req.body.goods_id, (err, results) => {
-            if (err) res.cc(err)
+            if (err) return res.cc(err)
             if (results.length !== 0) {
                 const sql = `update collect_goods set goods_status = '1' where goods_id= ?`
                 db.query(sql, req.body.goods_id, (err, results) => {
-                    if (err) res.cc(err)
+                    if (err) return res.cc(err)
                 })
             }
         })

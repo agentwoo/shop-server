@@ -33,7 +33,7 @@ exports.pubgoods = (req, res) => {
 // 我发布的商品
 exports.getpubgoods = (req, res) => {
     let user_id = req.user.user_id
-    const sql = `select * from pub_goods where goods_status = '1' and pub_user_id = ?  order by goods_pub_time desc`
+    const sql = `select * from pub_goods where is_delgoods = '0' and goods_status = '1' and pub_user_id = ?  order by goods_pub_time desc`
     db.query(sql, user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
@@ -44,16 +44,6 @@ exports.getpubgoods = (req, res) => {
     })
 }
 
-// 删除我发布的商品
-exports.delgoodsitem = (req, res) => {
-    const sql = `update pub_goods set is_delgoods = '1' and goods_status = '1' where goods_id = ?`
-    // console.log(req.body.goods_id);
-    db.query(sql, req.body.goods_id, (err, results) => {
-        if (err) return res.cc(err)
-        if (results.affectedRows !== 1) res.cc(err)
-        res.cc('删除成功！', true)
-    })
-}
 
 
 // 待发货的商品列表
@@ -118,13 +108,13 @@ exports.updategoodsdesc = (req, res) => {
             goodsinfo.goods_swiper_img1, goodsinfo.goods_swiper_img2, goodsinfo.goods_swiper_img3, goodsinfo.goods_swiper_img4,
             goodsinfo.goods_id
         ], (err, results) => {
-            if (err) res.cc(err)
-            if (results.affectedRows !== 1) res.cc('更新成功！', true)
+            if (err) return res.cc(err)
+            if (results.affectedRows !== 1) return res.cc('禁止重复提交', true)
             // 查询collect_goods表中是否有该数据
             const sql = ` select * from collect_goods where goods_id = ?`
             db.query(sql, goodsinfo.goods_id, (err, results) => {
                 if (err) res.cc(err)
-                if (results.length === 0) res.cc('更新成功！', true)
+                if (results.length === 0) return res.cc('更新成功！', true)
                 // 修改collect_goods表中数据
                 if (results.length !== 0) {
                     const sql =
@@ -135,9 +125,9 @@ exports.updategoodsdesc = (req, res) => {
                             goodsinfo.goods_present_price, goodsinfo.goods_contact,
                             goodsinfo.goods_title, goodsinfo.goods_desc, goodsinfo.goods_title_img, goodsinfo.goods_id
                         ], (err, results) => {
-                            if (err) res.cc(err)
-                            if (results.affectedRows !== 1) res.cc('更新失败！')
-                            res.cc('更新成功！', true)
+                            if (err) return res.cc(err)
+                            if (results.affectedRows !== 1) return res.cc('更新失败！')
+                            return res.cc('更新成功！', true)
                         })
                 }
             })
@@ -157,7 +147,7 @@ exports.deltradefinishedgoods = (req, res) => {
 
 // 获取下架的商品
 exports.getremovegoods = (req, res) => {
-    const sql = `select * from pub_goods where is_delgoods = '1' and pub_user_id = ?`
+    const sql = `select * from pub_goods where is_delgoods = '0' and goods_status = '0' and pub_user_id = ?`
     db.query(sql, req.user.user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({
@@ -165,5 +155,70 @@ exports.getremovegoods = (req, res) => {
             message: '查询成功！',
             data: results
         })
+    })
+}
+
+
+// 下架我发布的商品
+exports.delgoodsitem = (req, res) => {
+    const sql = `update pub_goods set goods_status = '0' where goods_id = ?`
+    // console.log(req.body.goods_id);
+    db.query(sql, req.body.goods_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('下架失败')
+        // 判断该商品是否有人收藏
+        const sql = `select * from collect_goods where  goods_id = ?`
+        db.query(sql, req.body.goods_id, (err, results) => {
+            if (err) return res.cc(err)
+            if (results.length !== 0) {
+                // 修改收藏表中的商品状态
+                const sql = `update collect_goods set goods_status = '2' where goods_id = ?`
+                db.query(sql, req.body.goods_id, (err, results) => {
+                    if (err) return res.cc(err)
+                    if (results.affectedRows !== 1) return res.cc('下架失败')
+                    return res.cc('下架成功！', true)
+                })
+            }
+            if (results.length === 0) {
+                return res.cc('下架成功！', true)
+            }
+        })
+
+    })
+}
+// 删除下架的商品
+exports.removegoods = (req, res) => {
+    const sql = `update pub_goods set is_delgoods = '1' where goods_id = ?`
+    db.query(sql, req.body.goods_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('删除失败')
+        res.cc('删除成功！', true)
+    })
+}
+
+// 重新上架商品
+exports.readdpubgoods = (req, res) => {
+    const sql = `update pub_goods set goods_status = '1' where goods_id = ?`
+    db.query(sql, req.body.goods_id, (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('上架失败')
+        // 判断该商品是否有人收藏
+        const sql = `select * from collect_goods where  goods_id = ?`
+        db.query(sql, req.body.goods_id, (err, results) => {
+            if (err) return res.cc(err)
+            if (results.length !== 0) {
+                // 修改收藏表中的商品状态
+                const sql = `update collect_goods set goods_status = '1' where goods_id = ?`
+                db.query(sql, req.body.goods_id, (err, results) => {
+                    if (err) return res.cc(err)
+                    if (results.affectedRows !== 1) return res.cc('修改收藏表失败')
+                    return res.cc('上架成功！', true)
+                })
+            }
+            if (results.length === 0) {
+                return res.cc('上架成功！', true)
+            }
+        })
+
     })
 }

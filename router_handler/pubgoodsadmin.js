@@ -16,10 +16,27 @@ exports.getallgoodsadmin = (req, res) => {
 
 // 下架商品
 exports.removegoodsadmin = (req, res) => {
-    const sql = `update pub_goods set is_delgoods = '1' where goods_id = ?`
+    const sql = `update pub_goods set  goods_status = '0' where goods_id = ?`
     db.query(sql, req.body.goods_id, (err, results) => {
         if (err) return res.cc(err)
         if (results.affectedRows === 0) return res.cc('下架失败')
-        res.cc('下架成功', true)
+        // 判断是否有人收藏该商品
+        const sql = `select * from collect_goods where goods_id = ?`
+        db.query(sql, req.body.goods_id, (err, results) => {
+            if (err) return res.cc(err)
+            if (results.length !== 0) {
+                // 将收藏表中商品状态设为失效
+                const sql = `update collect_goods set goods_status = '2' where goods_id = ?`
+                db.query(sql, req.body.goods_id, (err, results) => {
+                    if (err) return res.cc(err)
+                    if (results.affectedRows === 0) return res.cc('修改收藏表失败')
+                    res.cc('下架成功', true)
+                })
+            }
+            if (results.length === 0) {
+                res.cc('下架成功', true)
+            }
+        })
+
     })
 }

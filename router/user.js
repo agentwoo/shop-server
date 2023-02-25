@@ -16,7 +16,8 @@ const {
     getuserList,
     updateuserpasswod,
     disableuser,
-    enableuser
+    enableuser,
+    comment,
 } = require('../router_handler/user')
 
 // 注册新用户
@@ -49,5 +50,8 @@ router.post('/disableuser', disableuser)
 
 // 启用用户
 router.post('/enableuser', enableuser)
+
+// 添加备注
+router.post('/comment', comment)
 
 module.exports = router

@@ -15,6 +15,8 @@ const {
     updategoodsdesc,
     deltradefinishedgoods,
     getremovegoods,
+    removegoods,
+    readdpubgoods,
 } = require('../router_handler/pubgoods')
 
 
@@ -47,5 +49,11 @@ router.post('/deltradefinishedgoods', deltradefinishedgoods)
 
 // 获取下架的商品
 router.post('/getremovegoods', getremovegoods)
+
+// 删除下架的商品
+router.post('/removegoods', removegoods)
+
+// 重新上架商品
+router.post('/readdpubgoods', readdpubgoods)
 
 module.exports = router

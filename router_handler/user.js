@@ -212,3 +212,13 @@ exports.enableuser = (req, res) => {
         res.cc('启用成功', true)
     })
 }
+
+// 添加备注
+exports.comment = (req, res) => {
+    const sql = `update user set comment = ? where user_id = ?`
+    db.query(sql, [req.body.comment, req.body.user_id], (err, results) => {
+        if (err) return res.cc(err)
+        if (results.affectedRows !== 1) return res.cc('添加备注失败')
+        res.cc('添加成功', true)
+    })
+}
