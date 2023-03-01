@@ -147,7 +147,7 @@ exports.deltradefinishedgoods = (req, res) => {
 
 // 获取下架的商品
 exports.getremovegoods = (req, res) => {
-    const sql = `select * from pub_goods where is_delgoods = '0' and goods_status = '0' and pub_user_id = ?`
+    const sql = `select * from pub_goods where is_delgoods = '0' and (goods_status = '0' or goods_status = '5') and pub_user_id = ?`
     db.query(sql, req.user.user_id, (err, results) => {
         if (err) return res.cc(err)
         res.send({

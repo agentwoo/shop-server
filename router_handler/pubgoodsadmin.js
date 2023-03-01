@@ -16,7 +16,7 @@ exports.getallgoodsadmin = (req, res) => {
 
 // 下架商品
 exports.removegoodsadmin = (req, res) => {
-    const sql = `update pub_goods set  goods_status = '0' where goods_id = ?`
+    const sql = `update pub_goods set  goods_status = '5' where goods_id = ?`
     db.query(sql, req.body.goods_id, (err, results) => {
         if (err) return res.cc(err)
         if (results.affectedRows === 0) return res.cc('下架失败')
