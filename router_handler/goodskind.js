@@ -3,7 +3,7 @@ const db = require('../db/index')
 
 // 获取商品分类菜单
 exports.getgoodskind = (req, res) => {
-    const sql = `select * from goods_kind`
+    const sql = `select * from goods_kind order by value`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 1) return res.cc('暂无查询！', true)
@@ -37,8 +37,8 @@ exports.addgoodskind = (req, res) => {
 
 // 修改商品分类名称
 exports.editgoodskindtext = (req, res) => {
-    const sql = `update goods_kind set text = ? where kind_id = ?`
-    db.query(sql, [req.body.text, req.body.kind_id], (err, results) => {
+    const sql = `update goods_kind set text = ?,value = ? where kind_id = ?`
+    db.query(sql, [req.body.text, req.body.value, req.body.kind_id], (err, results) => {
         if (err) return res.cc(err)
         if (results.affectedRows === 0) return res.cc('修改失败，请重试！', true)
         // 查询pub_goods中是否有该分类的商品
@@ -60,6 +60,32 @@ exports.editgoodskindtext = (req, res) => {
         })
     })
 }
+
+
+// exports.editgoodskindtext = (req, res) => {
+//     const sql = `update goods_kind set text = ? where kind_id = ?`
+//     db.query(sql, [req.body.text, req.body.kind_id], (err, results) => {
+//         if (err) return res.cc(err)
+//         if (results.affectedRows === 0) return res.cc('修改失败，请重试！', true)
+//         // 查询pub_goods中是否有该分类的商品
+//         const sql = `select * from pub_goods where goods_pid = ?`
+//         db.query(sql, req.body.value, (err, results) => {
+//             if (err) return res.cc(err)
+//             if (results.length !== 0) {
+//                 // 修改已发布商品列表中的商品分类名称
+//                 const sql = `update pub_goods set goods_kind = ? where goods_pid = ?`
+//                 db.query(sql, [req.body.text, req.body.value], (err, results) => {
+//                     if (err) return res.cc(err)
+//                     if (results.affectedRows === 0) return res.cc('修改pubgoods失败')
+//                     res.cc('修改成功！', true)
+//                 })
+//             }
+//             if (results.length === 0) {
+//                 res.cc('修改成功', true)
+//             }
+//         })
+//     })
+// }
 
 // 删除分类---当该分类存在商品时则不允许删除
 exports.delgoodskind = (req, res) => {

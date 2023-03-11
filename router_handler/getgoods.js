@@ -17,7 +17,7 @@ exports.getgoodsdesc = (req, res) => {
 
 // 获取全部商品
 exports.getallgoodsList = (req, res) => {
-    const sql = `select * from pub_goods where goods_status = '1' and is_delgoods = '0'`
+    const sql = `select * from pub_goods where goods_status = '1' and is_delgoods = '0' order by rand()`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 0) return res.cc('暂无查询！', true)
