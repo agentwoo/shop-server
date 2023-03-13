@@ -4,6 +4,7 @@ const router = express.Router()
 // 导入用户路由处理函数
 const {
     getgoodsdesc,
+    getallgoodsrandList,
     getallgoodsList,
     getnewgoodsList,
     gethotgoodsList,
@@ -17,6 +18,9 @@ const { goods_id_schema } = require('../schema/getgoods')
 
 // 获取单个商品详情
 router.post('/getgoodsdesc', expressJoi(goods_id_schema), getgoodsdesc)
+
+// 获取全部商品-随机
+router.get('/getallgoodsrandList', getallgoodsrandList)
 
 // 获取全部商品
 router.get('/getallgoodsList', getallgoodsList)
