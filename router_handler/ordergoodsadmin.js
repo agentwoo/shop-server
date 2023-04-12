@@ -2,7 +2,7 @@ const db = require('../db/index')
 
 // 获取所有订单的商品列表
 exports.getallordergoods = (req, res) => {
-    const sql = `select * from goods_order`
+    const sql = `select * from goods_order order by order_id desc`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 0) return res.cc('暂无查询', true)

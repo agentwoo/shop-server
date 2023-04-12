@@ -2,7 +2,7 @@ const db = require('../db/index')
 
 // 获取所有商品数据
 exports.getallgoodsadmin = (req, res) => {
-    const sql = `select * from pub_goods`
+    const sql = `select * from pub_goods order by goods_id desc`
     db.query(sql, (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 0) return res.cc('暂无查询', true)
